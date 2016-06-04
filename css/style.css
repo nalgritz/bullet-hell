@@ -1,0 +1,30 @@
+body {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gamescreen {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  border: 1px solid black;
+  margin-top: 10px;
+
+}
+
+.plane {
+  position: absolute;
+  display: block;
+  width:  60px;
+  height: 60px;
+  margin: 400px 370px;
+}
+
+.bullet {
+  position: absolute;
+  border-radius: 2.5px;
+  width: 5px;
+  height: 5px;
+  background-color: black;
+  margin: 20px 20px;
+}
