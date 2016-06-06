@@ -3,20 +3,22 @@ body {
   text-align: center;
 }
 
-.gamescreen {
+.screen {
   position: relative;
-  width: 805px;
-  height: 805px;
+  width: 800px;
+  height: 800px;
   border: 1px solid black;
   margin-top: 10px;
+  overflow: hidden;
 }
 
-.plane {
+#ship {
   position: absolute;
   display: block;
   width:  60px;
   height: 60px;
-  margin: 400px 370px;
+  top: 400px;
+  left: 370px;
 }
 
 .bullet {
