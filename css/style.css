@@ -3,7 +3,7 @@ body {
   text-align: center;
 }
 
-.screen {
+#screen {
   position: relative;
   width: 800px;
   height: 800px;
