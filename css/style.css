@@ -5,11 +5,10 @@ body {
 
 .gamescreen {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 805px;
+  height: 805px;
   border: 1px solid black;
   margin-top: 10px;
-
 }
 
 .plane {
@@ -26,5 +25,4 @@ body {
   width: 5px;
   height: 5px;
   background-color: black;
-  margin: 20px 20px;
 }

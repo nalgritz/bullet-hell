@@ -10,10 +10,18 @@ arrow button -> move the plane
 1. create bullets
  1.1 moving bullet
  1.2 bullets direction -
- (random() * screen size, 0) or
- (screen size, 0) or
- (0, random() * screen size) or
- (0, screen size)
+(random() * screen size, 0) or
+(screen size, 0) or
+(0, random() * screen size) or
+(0, screen size)
+
+        // Define bullet
+        var $bullet = $('<div class="bullet"></div>').css({
+          left: xPos + 'px',
+          top: yPox + 'px'
+        });
+
+
 
 
 

@@ -1,16 +1,57 @@
 $(document).ready(function () {
-  // Define bullet
-  var $bullet = $('.bullet');
 
   // input new bullet
-  var createNewBullet = function () {
-    $('.gamescreen').append('<div class="bullet"></div>'
-    );
+  var createBullet = function (e) {
+    $('.gamescreen').append($bullet);
   };
-  createNewBullet();
 
-  // move bullet from left to right
-  var $moveBullet = $bullet.fadeIn().animate({ left: '+=800'}, 2000);
+  // move bullet from left to right, 2000 is bullet speed
+  // any ways to move within the screen
+  var moveBullet = function () {
+    $bullet.animate({opacity:1}, 0).animate({
+      left: '+=800',
+      top : '+=200'
+    }, 3000).animate({opacity:0}, 0);
+  };
+
+/*
+// found inputting .animate left & top gives moving with slopes, have to set up 4 conditions
+  var bulletDirection = [
+    '{left: xPos, top: '0'}',
+    '{left: xGameScreen, top: '0'}',
+    '{left: '0', top: yPos}',
+    '{left: '0', top: yGameScreen}'
+    ];
+*/
+
+  // set x,y total screen distance <---should set function to move across the screen (cos diagonal is longer than 800px)
+  var yGameScreen = $('.gamescreen').width();
+  var xGameScreen = $('.gamescreen').height();
+
+  // set random x, y position
+  var xPos = Math.round( Math.random() * xGameScreen);
+  var yPos = Math.round( Math.random() * yGameScreen);
+
+  // Define bullet
+  // how to random need 4 positions?
+  var $bullet = $('<div class="bullet"></div>').css({
+    marginTop: yPos + 'px',
+  });
+  // 4 positions are:
+    // marginTop: yPos + 'px', marginLeft: '0';
+    // marginTop: yGameScreen + 'px', marginLeft: '0';
+    // marginTop: '0', marginLeft: xPos + 'px';
+    // marginTop: '0', marginLeft: xGameScreen;
+
+
+
+
+
+  // testing to loop new bullet & move but the bullet reappear at the same location & direction
+  for (i = 0; i < 5; i++) {
+    createBullet();
+    moveBullet();
+}
 
 /*
 // bullet ref which shoot out of object
