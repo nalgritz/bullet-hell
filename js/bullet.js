@@ -1,8 +1,6 @@
 $(document).ready(function () {
-
-
   // Screen
-  var $screen = $('.screen');
+  var $screen = $('#screen');
   var xScreen = Math.round($screen.width());
   var yScreen = Math.round($screen.height());
 
@@ -23,10 +21,10 @@ $(document).ready(function () {
 
   // set random x, y position
   var x = function(e) {
-   return Math.floor( Math.random() * xScreen);
+   return Math.floor(Math.random() * xScreen);
   };
   var y = function (e) {
-   return Math.floor( Math.random() * yScreen);
+   return Math.floor(Math.random() * yScreen);
   };
 
   // Bullet coords, x()/y() only return the same number
@@ -37,17 +35,10 @@ $(document).ready(function () {
       [x() , yScreen], // bottom
       [0      , y() ], // right
       ];
-  }
+  };
 
-/*
-// trying to generate the values of 3 other sides
-  function GetValue() {
-    var xRandom = bulletCoords[Math.floor(Math.random() * bulletCoords().length)];
-    var yRandom = bulletCoords[Math.floor(Math.random() * bulletCoords().length)];
-  }
-*/
   // Bullet
-  var $bullet = $('<div class="bullet"></div>')
+  var $bullet = $('<div class="bullet"></div>');
 
   // input new bullet
   var createBullet = function (e) {
@@ -58,8 +49,8 @@ $(document).ready(function () {
   var moveBullet = function () {
     $bullet.animate({
       opacity: 1,
-      left: bulletCoords()[1][0], // end point
-      top : bulletCoords()[1][1], // end point
+        left: bulletCoords()[i][0], // x end point
+        top : bulletCoords()[i][1]  // y end point
     }, {
       easing: 'linear',
       duration: 3000, // however this duration may speed up or slow down depends on bullet distance
@@ -79,11 +70,11 @@ $(document).ready(function () {
       moveBullet();
       };
 
-    /*,
-    progress: function(){
-      // surface collision
-      // check if the ship left surface touch the bullet
-    }*/
+  /*,
+  progress: function(){
+    // surface collision
+    // check if the ship left surface touch the bullet
+  }*/
 
   var keybtn = function () {
     $(document).on('keydown', function(e){
@@ -139,7 +130,7 @@ $(document).ready(function () {
       }
     }
     if (key.down) {
-      if ( (yScreen - $ship.position().top) > $ship.height()) {
+      if ((yScreen-$ship.position().top)<$ship.height()) {
         $('#ship').css({top: position.top + 5});
       } else {
         key.down = false;
@@ -153,7 +144,7 @@ $(document).ready(function () {
       }
     }
     if (key.right) {
-      if ( (xScreen - $ship.position().left) > $ship.width()) {
+      if ((xScreen-$ship.position().left)<$ship.width()) {
         $('#ship').css({left: position.left + 5});
       } else {
         key.right = false;
@@ -171,6 +162,5 @@ $(document).ready(function () {
   createBullet();
   moveBullet();
   startGame();
-
 
 });
