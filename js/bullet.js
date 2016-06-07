@@ -7,6 +7,9 @@ $(document).ready(function () {
   // Ship
   var $ship = $('#ship');
 
+  // Bullet
+  var $bullet = $('<div class="bullet"></div>');
+
   // keyboard
   var key = {
     up   : false,
@@ -19,6 +22,7 @@ $(document).ready(function () {
   // Gameloop
   var gameloop = null;
 
+/*
   // set random x, y position
   var x = function(e) {
    return Math.floor(Math.random() * xScreen);
@@ -36,21 +40,34 @@ $(document).ready(function () {
       [0      , y() ], // right
       ];
   };
+*/
+
+  //Another logic to find the right bullets
+  function selectSide () {
+    return parseInt(Math.random() > 0.5 ? 0 : xScreen)
+  }
+
+  function randomPos () {
+    return parseInt(Math.random() * xScreen)
+  }
 
   // Bullet
-  var $bullet = $('<div class="bullet"></div>');
-
-  // input new bullet
-  var createBullet = function (e) {
-    $screen.append($bullet);
-  };
+  $(function () {
+    var bulletNumber = 100;
+    for (var i = 0; i < bulletNumber; i++ ) {
+      var $bullet = $('<div class="bullet"></div>').css({
+        left: selectSide() + 'px',
+        top : randomPos () + 'px'
+      }).appendTo($screen);
+    }
+  });
 
   // move bullet from left to right, 3000 is bullet speed
   var moveBullet = function () {
     $bullet.animate({
       opacity: 1,
-        left: bulletCoords()[i][0], // x end point
-        top : bulletCoords()[i][1]  // y end point
+        left: '800', // x end point
+        top : '600'  // y end point
     }, {
       easing: 'linear',
       duration: 3000, // however this duration may speed up or slow down depends on bullet distance
@@ -59,7 +76,7 @@ $(document).ready(function () {
       }
     });
   };
-
+/*
     for (var i = 0; i < bulletCoords().length ; i++) {
       createBullet();
       $bullet.css({
@@ -69,7 +86,7 @@ $(document).ready(function () {
       i++;
       moveBullet();
       };
-
+*/
   /*,
   progress: function(){
     // surface collision
@@ -130,7 +147,7 @@ $(document).ready(function () {
       }
     }
     if (key.down) {
-      if ((yScreen-$ship.position().top)<$ship.height()) {
+      if (yScreen-position.top > $ship.height()) {
         $('#ship').css({top: position.top + 5});
       } else {
         key.down = false;
@@ -144,7 +161,7 @@ $(document).ready(function () {
       }
     }
     if (key.right) {
-      if ((xScreen-$ship.position().left)<$ship.width()) {
+      if (xScreen-position.left > $ship.width()) {
         $('#ship').css({left: position.left + 5});
       } else {
         key.right = false;
@@ -159,7 +176,6 @@ $(document).ready(function () {
     }, 17);
   };
 
-  createBullet();
   moveBullet();
   startGame();
 
