@@ -1,199 +1,162 @@
 $(document).ready(function () {
 
-// Bullet
+
+  // Screen
+  var $screen = $('.screen');
+  var xScreen = Math.round($screen.width());
+  var yScreen = Math.round($screen.height());
+
+  // Ship
+  var $ship = $('#ship');
+
+  // keyboard
+  var key = {
+    up   : false,
+    down : false,
+    left : false,
+    right: false,
+    start: false
+  };
+
+  // Gameloop
+  var gameloop = null;
+
+  // set random x, y position
+  var x = function(e) {
+   return Math.floor( Math.random() * xScreen);
+  };
+  var y = function (e) {
+   return Math.floor( Math.random() * yScreen);
+  };
+
+  // Bullet coords, x()/y() only return the same number
+  var bulletCoords = function () {
+    return [
+      [x() , 0      ], // top
+      [xScreen, y() ], // left
+      [x() , yScreen], // bottom
+      [0      , y() ], // right
+      ];
+  }
+
+/*
+// trying to generate the values of 3 other sides
+  function GetValue() {
+    var xRandom = bulletCoords[Math.floor(Math.random() * bulletCoords().length)];
+    var yRandom = bulletCoords[Math.floor(Math.random() * bulletCoords().length)];
+  }
+*/
+  // Bullet
+  var $bullet = $('<div class="bullet"></div>')
+
   // input new bullet
   var createBullet = function (e) {
     $screen.append($bullet);
   };
 
-  // move bullet from left to right, 2000 is bullet speed
-  // any ways to move within the screen
+  // move bullet from left to right, 3000 is bullet speed
   var moveBullet = function () {
     $bullet.animate({
       opacity: 1,
-      left: '800',
-      top : '200',
+      left: bulletCoords()[1][0], // end point
+      top : bulletCoords()[1][1], // end point
     }, {
       easing: 'linear',
-      duration: 3000,
+      duration: 3000, // however this duration may speed up or slow down depends on bullet distance
       complete: function(){
         $(this).remove();
-    }
-
-  // new bullet:
-
-
-      /*,
-      progress: function(){
-        // surface collision
-        // check if the ship left surface touch the bullet
-      }*/
+      }
     });
   };
 
-/*
-// found inputting .animate left & top gives moving with slopes, have to set up 4 conditions
-  var bulletDirection = [
-    '{left: xPos, top: '0'}',
-    '{left: xScreen, top: '0'}',
-    '{left: '0', top: yPos}',
-    '{left: '0', top: yScreen}'
-    ];
-*/
+    for (var i = 0; i < bulletCoords().length ; i++) {
+      createBullet();
+      $bullet.css({
+        left: bulletCoords()[i][0] + 'px',
+        top : bulletCoords()[i][1] + 'px'
+      });
+      i++;
+      moveBullet();
+      };
 
-  // set x,y total screen distance <---should set function to move across the screen (cos diagonal is longer than 800px)
-  $screen = $('.screen');
+    /*,
+    progress: function(){
+      // surface collision
+      // check if the ship left surface touch the bullet
+    }*/
 
-  var xScreen = $screen.width();
-  var yScreen = $screen.height();
-
-  // set random x, y position
-  var xPos = function(e) {
-   return Math.round( Math.random() * xScreen);
-  };
-
-  var yPos = function (e) {
-   return Math.round( Math.random() * yScreen);
-  };
-
-  // Define bullet
-  // how to random need 4 positions?
-  var $bullet = $('<div class="bullet"></div>').css({
-    marginTop: yPos() + 'px',
-  });
-  // 4 positions are:
-    // marginTop: yPos + 'px', marginLeft: '0';
-    // marginTop: yScreen + 'px', marginLeft: '0';
-    // marginTop: '0', marginLeft: xPos + 'px';
-    // marginTop: '0', marginLeft: xScreen;
-
-
-  // testing to loop new bullet & move but the bullet reappear at the same location & direction
-
-    createBullet();
-    moveBullet();
-
-/*
-// bullet ref which shoot out of object
-// Bullet class
-function Bullet(x, y, speed, angle,  width, height, colors){
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.angle = angle;
-    this.width = width;
-    this.height = height;
-    this.colors = colors;
-    this.frameCounter = 0;
-}
-
-Bullet.prototype.update = function(){
-    // (!) here we calculate the vector (vx, vy) that represents the velocity
-    var vx = this.speed * Math.cos(this.angle-(Math.PI/2));
-    var vy = this.speed * Math.sin(this.angle-(Math.PI/2));
-
-    // move the bullet
-    this.x += vx;
-    this.y += vy;
-}
-
-Bullet.prototype.draw = function(context, xScroll,  yScroll){
-    context.save();
-
-    if(this.angle != 0) {
-        // translate to the orign of system
-        context.translate(this.x-xScroll, this.y-yScroll);
-        // rotate
-        context.rotate(this.angle);
-        // translate back to actual position
-        context.translate(xScroll-this.x, yScroll-this.y);
-    }
-    // animate the bullets (changing colors)
-    context.fillStyle = this.colors[this.frameCounter % this.colors.length];
-    this.frameCounter++;
-
-    // draw the bullet
-    context.fillRect((this.x-this.width/2) - xScroll, (this.y-this.height/2) - yScroll, this.width, this.height);
-
-    context.restore();
-}
-*/
-
-  // Ship
-  var $ship = $('#ship');
-
-  var gameloop = null;
-
-  var movement = {
-    up: false,
-    down: false,
-    left: false,
-    right: false
-  };
-
-  var keyMovement = function () {
+  var keybtn = function () {
     $(document).on('keydown', function(e){
       switch (e.keyCode) {
         case 37:
-          movement.left  = true;
+          key.left  = true;
           break;
         case 38:
-          movement.up    = true;
+          key.up    = true;
           break;
         case 39:
-          movement.right = true;
+          key.right = true;
           break;
         case 40:
-          movement.down  = true;
+          key.down  = true;
           break;
       }
     });
     $(document).on('keyup', function(e){
       switch (e.keyCode) {
         case 37:
-          movement.left  = false;
+          key.left  = false;
           break;
         case 38:
-          movement.up    = false;
+          key.up    = false;
           break;
         case 39:
-          movement.right = false;
+          key.right = false;
           break;
         case 40:
-          movement.down  = false;
+          key.down  = false;
           break;
       }
     });
   };
 
+  // for start key,
+  // 1. spacebar key is to start game;
+  // 2. if game is stopped, spacebar key turns available to press
+/*
+  $(document).on('click', function () {
+    resetGame();
+  })
+*/
+
   var moveShip = function () {
     var position = $ship.position();
-    if (movement.up) {
+    if (key.up) {
       if ( position.top > 0) {
         $('#ship').css({top: position.top - 5});
       } else {
-        movement.up = false;
+        key.up = false;
       }
     }
-    if (movement.down) {
+    if (key.down) {
       if ( (yScreen - $ship.position().top) > $ship.height()) {
         $('#ship').css({top: position.top + 5});
       } else {
-        movement.down = false;
+        key.down = false;
       }
     }
-    if (movement.left) {
+    if (key.left) {
       if ( position.left > 0) {
         $('#ship').css({left: position.left - 5});
       } else {
-        movement.left = false;
+        key.left = false;
       }
     }
-    if (movement.right) {
+    if (key.right) {
       if ( (xScreen - $ship.position().left) > $ship.width()) {
         $('#ship').css({left: position.left + 5});
       } else {
-        movement.right = false;
+        key.right = false;
       }
     }
   };
@@ -201,10 +164,12 @@ Bullet.prototype.draw = function(context, xScroll,  yScroll){
   var startGame = function () {
     gameloop = setInterval(function(){
       moveShip();
-      keyMovement();
+      keybtn();
     }, 17);
   };
 
+  createBullet();
+  moveBullet();
   startGame();
 
 
