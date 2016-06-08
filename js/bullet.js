@@ -56,7 +56,7 @@ $(document).ready(function () {
     }
   };
 
-  // ***Task left
+  // Create bullet, animate and finish
   var createBullet = function () {
     var sides     = selectSides();
     var startSide = sides[0];
@@ -103,7 +103,6 @@ $(document).ready(function () {
           timeLapsed = endTime - startTime;
           timeSurvived = (timeLapsed/1000).toFixed(3);
           console.log ('hi ' + timeSurvived +' '+bulletAmount);
-          // stopGame input here
         }
       }
     });
@@ -213,7 +212,6 @@ $(document).ready(function () {
     bindResetBtn();
   };
 
-// known bug: start game after multiple reset takes it to speed up & multiple bullets
   var bindResetBtn = function () {
     $('#reset').on('click', function () {
       console.log("reset")
