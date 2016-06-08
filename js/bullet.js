@@ -1,12 +1,12 @@
 $(document).ready(function () {
   // Gameloop
   var gameloop = null;
-
+  var bulletLoop = null;
   // Time
   var startTime = null;
   var endTime   = null;
-  var timeLapsed= endTime - startTime;
-  var timeSurvived = Math.floor(timeLapsed/60)+'.'+timeLapsed%60;
+  var timeLapsed = null;
+  var timeSurvived = null;
 
   // Screen
   var $screen = $('#screen');
@@ -31,21 +31,6 @@ $(document).ready(function () {
     left : false,
     right: false,
     start: false
-  };
-
-  // End game data
-  var endGameData = {
-    time: timeSurvived,
-    bullet: bulletAmount
-    // no of bullet taken
-  };
-
-
-  var scoreTime  = function () {
-    return 'you survived for ' + timeSurvived + '. Try again?' ;
-  };
-  var scoreBullet = function () {
-    return 'bullet counts:' + bulletAmount;
   };
 
   // Generate bullets
@@ -110,15 +95,16 @@ $(document).ready(function () {
           bulletPos.top > shipTop + $ship.height() ||
           bulletPos.left+bulletDiameter < shipLeft;
         if (stopCondition) {
-        } else{
-          // put stopGame here
-          console.log ('touch');}
-  // Game over (collision system),
-  //    key = false;
-  //    EndTime = Date.now();
-
-  //    bullets stop moving;
-  //    current time - prev time (in terms of ms) return in s & ms
+        } else {
+          clearInterval(gameloop);
+          clearInterval(bulletLoop);
+          $('.bullet').stop().remove();
+          endTime = Date.now();
+          timeLapsed = endTime - startTime;
+          timeSurvived = (timeLapsed/1000).toFixed(3);
+          console.log ('hi ' + timeSurvived +' '+bulletAmount);
+          // stopGame input here
+        }
       }
     });
   };
@@ -130,10 +116,10 @@ $(document).ready(function () {
       createBullet();
     }
     // bullet comes in every timeInterval
-    // setInterval(function() {
-    //   createBullet();
-    //   bulletAmount++;
-    // }, 1000);
+    bulletLoop = setInterval(function() {
+      createBullet();
+      bulletAmount++;
+    }, 1000);
   };
 
   // Control
@@ -202,34 +188,43 @@ $(document).ready(function () {
           break;
       }
     });
+  };
+
+  var bindStart = function () {
     $(document).one('keypress', function(e){
       if (e.keyCode === 32) {
         startGame();
-        startTime = Date.now();
       }
     });
   };
 
   var startGame = function () {
+    startTime = Date.now();
     generateBullet();
     gameloop = setInterval(function(){
       moveShip();
     }, 1000/60);
   };
 
-  //  Reset Button
-  //
-  //  var resettimer = function () { startTIme = null; endTime = null};
-
-/*
-  $(document).on('click', function () {
-    resetGame();
-  })
-*/
-
   var init = function () {
     keybtn();
+    bindStart();
+    bindResetBtn();
   };
+
+// known bug: start game after multiple reset takes it to speed up & multiple bullets
+
+
+  var bindResetBtn = function () {
+    $('#reset').on('click', function () {
+      clearInterval(gameloop);
+      clearInterval(bulletLoop);
+      $('.bullet').stop().remove();
+      $ship.css({top: '400px', left: '370px'});
+      var bulletAmount = 0;
+      bindStart();
+    })
+  }
 
   init();
 });
