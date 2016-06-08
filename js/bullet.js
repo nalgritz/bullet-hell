@@ -191,7 +191,8 @@ $(document).ready(function () {
   };
 
   var bindStart = function () {
-    $(document).one('keypress', function(e){
+    $(document).off('keypress').one('keypress', function(e){
+      console.log("space")
       if (e.keyCode === 32) {
         startGame();
       }
@@ -213,15 +214,14 @@ $(document).ready(function () {
   };
 
 // known bug: start game after multiple reset takes it to speed up & multiple bullets
-
-
   var bindResetBtn = function () {
     $('#reset').on('click', function () {
+      console.log("reset")
       clearInterval(gameloop);
       clearInterval(bulletLoop);
       $('.bullet').stop().remove();
       $ship.css({top: '400px', left: '370px'});
-      var bulletAmount = 0;
+      bulletAmount = 0;
       bindStart();
     })
   }
