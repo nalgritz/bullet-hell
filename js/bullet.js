@@ -5,7 +5,8 @@ $(document).ready(function () {
   // Time
   var startTime = null;
   var endTime   = null;
-  var timeSurvived = Math.floor((endTime - startTime)/60)+'.'+(endTime - startTime)%60;
+  var timeLapsed= endTime - startTime;
+  var timeSurvived = Math.floor(timeLapsed/60)+'.'+timeLapsed%60;
 
   // Screen
   var $screen = $('#screen');
@@ -32,15 +33,20 @@ $(document).ready(function () {
     start: false
   };
 
-  // Winning condition
-  var winningCondition = {
+  // End game data
+  var endGameData = {
     time: timeSurvived,
+    bullet: bulletAmount
+    // no of bullet taken
+  };
 
-  }
 
-  var scoreTime = function () {
-    return 'you survived for ' + timeSurvived + '. Try again?'
-  }
+  var scoreTime  = function () {
+    return 'you survived for ' + timeSurvived + '. Try again?' ;
+  };
+  var scoreBullet = function () {
+    return 'bullet counts:' + bulletAmount;
+  };
 
   // Generate bullets
   var selectSides  = function () {
@@ -63,7 +69,7 @@ $(document).ready(function () {
     } else {
       return [-bulletDiameter, Math.floor(Math.random() * yScreen + 1 - bulletDiameter)];
     }
-  }
+  };
 
   // ***Task left
   var createBullet = function () {
@@ -84,19 +90,35 @@ $(document).ready(function () {
       top : startPos[1]
     }).animate({
       opacity: 1,
-      left: endPos[0], // x end point
-      top : endPos[1]  // y end point
+      left: endPos[0],
+      top : endPos[1]
     }, {
       easing: 'linear',
-      duration: duration, // however this duration may speed up or slow down depends on bullet distance
+      duration: duration,
       complete: function() {
         createBullet();
         $(this).remove();
       },
       progress: function () {
-        var shipPosition = $ship.position();
-        var shipTop      = shipPosition.top;
-        // here is collision condition
+        var shipPos   = $ship.position();
+        var shipTop   = shipPos.top;
+        var shipLeft  = shipPos.left;
+        var bulletPos = $bullet.position();
+        var stopCondition =
+          bulletPos.top+bulletDiameter < shipTop ||
+          bulletPos.left > shipLeft + $ship.width() ||
+          bulletPos.top > shipTop + $ship.height() ||
+          bulletPos.left+bulletDiameter < shipLeft;
+        if (stopCondition) {
+        } else{
+          // put stopGame here
+          console.log ('touch');}
+  // Game over (collision system),
+  //    key = false;
+  //    EndTime = Date.now();
+
+  //    bullets stop moving;
+  //    current time - prev time (in terms of ms) return in s & ms
       }
     });
   };
@@ -106,9 +128,13 @@ $(document).ready(function () {
     var bulletNumber = initialBullets;
     for (var i = 0; i < bulletNumber; i++ ) {
       createBullet();
-    };
-    setInterval(function() {createBullet()}, 1000)
-  }
+    }
+    // bullet comes in every timeInterval
+    // setInterval(function() {
+    //   createBullet();
+    //   bulletAmount++;
+    // }, 1000);
+  };
 
   // Control
   var moveShip = function () {
@@ -176,12 +202,12 @@ $(document).ready(function () {
           break;
       }
     });
-    $(document).on('keypress', function(e){
+    $(document).one('keypress', function(e){
       if (e.keyCode === 32) {
         startGame();
         startTime = Date.now();
       }
-    })
+    });
   };
 
   var startGame = function () {
@@ -191,38 +217,15 @@ $(document).ready(function () {
     }, 1000/60);
   };
 
-  // Game over (collision system),
-  //    key = false;
-  //    EndTime = Date.now();
-
-  //    bullets stop moving;
-  //    current time - prev time (in terms of ms) return in s & ms
-
   //  Reset Button
   //
   //  var resettimer = function () { startTIme = null; endTime = null};
-
 
 /*
   $(document).on('click', function () {
     resetGame();
   })
 */
-
-/*
-  var stopCondition =
-    // bulletPos.top + 5 == shipPos.top ||
-    bulletPos.left == shipPos.left + $ship.width()
-    // bulletPos.top == shipPos.top + $ship.height() ||
-    // bulletPos.left + 5 == shipPos.left;
-
-  var stopGame = function () {
-    if (stopCondition) {
-      console.log('touch');
-    }
-  }
-*/
-
 
   var init = function () {
     keybtn();
