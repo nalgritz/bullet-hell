@@ -7,23 +7,21 @@ $(document).ready(function () {
   var endTime   = null;
   var timeLapsed = null;
   var timeSurvived = null;
-
+  //
+  var $endGame = $('#endgame');
   // Screen
   var $screen = $('#screen');
   var xScreen = 800;
   var yScreen = 800;
-
   // Ship
   var $ship = $('#ship');
   var shipSpeed = 4;
-
   // Bullet
   var $bullet  = $('<div class="bullet"></div>');
   var bulletDiameter = 5;
   var initialBullets = 1;
   var bulletAmount   = 0;
   var defaultBulletDuration = 4000;
-
   // keyboard
   var key = {
     up   : false,
@@ -32,7 +30,8 @@ $(document).ready(function () {
     right: false,
     start: false
   };
-
+  // score for bestScore
+  var score = [];
   // Generate bullets
   var selectSides  = function () {
     var sides       = ["top", "right", "bot", "left"];
@@ -40,7 +39,6 @@ $(document).ready(function () {
     var startSide   = sides.splice(startIndex, 1);
     var endIndex    = Math.floor(Math.random() * 3);
     var endSide     = sides.splice(endIndex, 1);
-
     return startSide.concat(endSide);
   };
 
@@ -90,10 +88,10 @@ $(document).ready(function () {
         var shipLeft  = shipPos.left;
         var bulletPos = $bullet.position();
         var stopCondition =
-          bulletPos.top+bulletDiameter < shipTop ||
-          bulletPos.left > shipLeft + $ship.width() ||
-          bulletPos.top > shipTop + $ship.height() ||
-          bulletPos.left+bulletDiameter < shipLeft;
+          bulletPos.top+bulletDiameter < shipTop+7||
+          bulletPos.left > shipLeft + $ship.width()-7 ||
+          bulletPos.top > shipTop + $ship.height()-5 ||
+          bulletPos.left+bulletDiameter < shipLeft+7;
         if (stopCondition) {
         } else {
           clearInterval(gameloop);
@@ -102,7 +100,12 @@ $(document).ready(function () {
           endTime = Date.now();
           timeLapsed = endTime - startTime;
           timeSurvived = (timeLapsed/1000).toFixed(3);
-          console.log ('hi ' + timeSurvived +' '+bulletAmount);
+          $endGame.show().effect('bounce', {times: 4}, 'slow');
+          $('#time').text(timeSurvived);
+          $('#bulletnumber').text(bulletAmount);
+          score.push(parseFloat(timeSurvived));
+          console.log(score);
+          $('#bestscore').text(Math.max(score));
         }
       }
     });
@@ -191,7 +194,6 @@ $(document).ready(function () {
 
   var bindStart = function () {
     $(document).off('keypress').one('keypress', function(e){
-      console.log("space")
       if (e.keyCode === 32) {
         startGame();
       }
@@ -214,12 +216,12 @@ $(document).ready(function () {
 
   var bindResetBtn = function () {
     $('#reset').on('click', function () {
-      console.log("reset")
       clearInterval(gameloop);
       clearInterval(bulletLoop);
       $('.bullet').stop().remove();
       $ship.css({top: '400px', left: '370px'});
       bulletAmount = 0;
+      $('#endgame').hide();
       bindStart();
     })
   }

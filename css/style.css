@@ -1,22 +1,31 @@
+@font-face {
+  font-family: 'SilkScreen';
+  src: local('SilkScreen'), url('../fonts/slkscr.ttf') format('truetype');
+}
+
 body {
   margin: 0 auto;
   text-align: center;
+  background-color: black;
+  font-family: 'SilkScreen';
+  color: white;
 }
 
 #container {
   position: relative;
-  width: 802px;
-  height: 802px;
-  border: 1px solid black;
+  width: 806px;
+  height: 806px;
+  border: 4px dashed red;
   margin: 10px auto 0;
   overflow: hidden;
 }
 
 #screen {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-image: url("../img/bg.jpg");
 }
 
 #ship {
@@ -30,8 +39,32 @@ body {
 
 .bullet {
   position: absolute;
-  border-radius: 2.5px;
-  width: 5px;
-  height: 5px;
+  border-radius: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: #E4966C;
+}
+
+
+ #endgame {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   background-color: black;
 }
+
+  #timelapse {
+  margin-top: 0;
+  padding-top: 300px;
+  padding-bottom: 30px;
+  font-size: 50px;
+}
+
+  div {
+    font-size: 30px;
+  }
+
+  span {
+    font-size: 40px;
+  }
