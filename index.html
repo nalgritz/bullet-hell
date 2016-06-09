@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <script src="js/jquery-2.2.4.min.js"></script>
   <script src="js/bullet.js" async></script>
+  <script src="js/jquery-ui.min.js" async></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <title>
   Have fun!
@@ -16,9 +17,21 @@
   <button class="btn btn-lg" id="reset">Reset Game</button>
   <div id="container">
     <div class="center-block" id="screen">
-      <img id="ship" src="./img/ship.jpg">
+      <img id="ship" src="./img/ship1.png">
+    </div>
+    <div id="endgame">
+      <h2 id="timelapse">Time Lapsed</h2>
+      <div>
+        <span id="time"></span> s
+      </div>
+      <div>
+        Bullet Shot:
+        <span id="bulletnumber"></span>
+      </div>
+      <div>
+        Best Score: <span id="bestscore"></span> s
+      </div>
     </div>
   </div>
-
 </body>
 </html>

@@ -1,27 +1,27 @@
 $(document).ready(function () {
   // Gameloop
   var gameloop = null;
-
+  var bulletLoop = null;
   // Time
   var startTime = null;
   var endTime   = null;
-
+  var timeLapsed = null;
+  var timeSurvived = null;
+  //
+  var $endGame = $('#endgame');
   // Screen
   var $screen = $('#screen');
   var xScreen = 800;
   var yScreen = 800;
-
   // Ship
   var $ship = $('#ship');
-  var shipSpeed = 2;
-
+  var shipSpeed = 4;
   // Bullet
   var $bullet  = $('<div class="bullet"></div>');
   var bulletDiameter = 5;
-  var initialBullets = 5;
+  var initialBullets = 1;
   var bulletAmount   = 0;
   var defaultBulletDuration = 4000;
-
   // keyboard
   var key = {
     up   : false,
@@ -30,7 +30,8 @@ $(document).ready(function () {
     right: false,
     start: false
   };
-
+  // score for bestScore
+  var score = [];
   // Generate bullets
   var selectSides  = function () {
     var sides       = ["top", "right", "bot", "left"];
@@ -38,7 +39,6 @@ $(document).ready(function () {
     var startSide   = sides.splice(startIndex, 1);
     var endIndex    = Math.floor(Math.random() * 3);
     var endSide     = sides.splice(endIndex, 1);
-
     return startSide.concat(endSide);
   };
 
@@ -52,8 +52,9 @@ $(document).ready(function () {
     } else {
       return [-bulletDiameter, Math.floor(Math.random() * yScreen + 1 - bulletDiameter)];
     }
-  }
+  };
 
+  // Create bullet, animate and finish
   var createBullet = function () {
     var sides     = selectSides();
     var startSide = sides[0];
@@ -72,30 +73,58 @@ $(document).ready(function () {
       top : startPos[1]
     }).animate({
       opacity: 1,
-      left: endPos[0], // x end point
-      top : endPos[1]  // y end point
+      left: endPos[0],
+      top : endPos[1]
     }, {
       easing: 'linear',
-      duration: duration, // however this duration may speed up or slow down depends on bullet distance
+      duration: duration,
       complete: function() {
         createBullet();
         $(this).remove();
       },
       progress: function () {
-        var shipPosition = $ship.position();
-        var shipTop      = shipPosition.top;
+        var shipPos   = $ship.position();
+        var shipTop   = shipPos.top;
+        var shipLeft  = shipPos.left;
+        var bulletPos = $bullet.position();
+        var stopCondition =
+          bulletPos.top+bulletDiameter < shipTop+7||
+          bulletPos.left > shipLeft + $ship.width()-7 ||
+          bulletPos.top > shipTop + $ship.height()-5 ||
+          bulletPos.left+bulletDiameter < shipLeft+7;
+        if (stopCondition) {
+        } else {
+          clearInterval(gameloop);
+          clearInterval(bulletLoop);
+          $('.bullet').stop().remove();
+          endTime = Date.now();
+          timeLapsed = endTime - startTime;
+          timeSurvived = (timeLapsed/1000).toFixed(3);
+          $endGame.show().effect('bounce', {times: 4}, 'slow');
+          $('#time').text(timeSurvived);
+          $('#bulletnumber').text(bulletAmount);
+          score.push(parseFloat(timeSurvived));
+          console.log(score);
+          $('#bestscore').text(Math.max(score));
+        }
       }
     });
   };
 
-  var generateInitialBullet = function () {
+  var generateBullet = function () {
     bulletAmount = initialBullets;
     var bulletNumber = initialBullets;
     for (var i = 0; i < bulletNumber; i++ ) {
       createBullet();
     }
-  }
+    // bullet comes in every timeInterval
+    bulletLoop = setInterval(function() {
+      createBullet();
+      bulletAmount++;
+    }, 1000);
+  };
 
+  // Control
   var moveShip = function () {
     var shipPos = $ship.position();
     if (key.up) {
@@ -126,13 +155,6 @@ $(document).ready(function () {
         key.right = false;
       }
     }
-  };
-
-  var startGame = function () {
-    generateInitialBullet();
-    gameloop = setInterval(function(){
-      moveShip();
-    }, 1000/60);
   };
 
   var keybtn = function () {
@@ -168,18 +190,41 @@ $(document).ready(function () {
           break;
       }
     });
-    $(document).on('keypress', function(e){
-      if (e.keyCode === 32) {
-        startGame();
-        startTime = Date.now();
-      }
-    })
   };
 
+  var bindStart = function () {
+    $(document).off('keypress').one('keypress', function(e){
+      if (e.keyCode === 32) {
+        startGame();
+      }
+    });
+  };
+
+  var startGame = function () {
+    startTime = Date.now();
+    generateBullet();
+    gameloop = setInterval(function(){
+      moveShip();
+    }, 1000/60);
+  };
 
   var init = function () {
     keybtn();
+    bindStart();
+    bindResetBtn();
   };
+
+  var bindResetBtn = function () {
+    $('#reset').on('click', function () {
+      clearInterval(gameloop);
+      clearInterval(bulletLoop);
+      $('.bullet').stop().remove();
+      $ship.css({top: '400px', left: '370px'});
+      bulletAmount = 0;
+      $('#endgame').hide();
+      bindStart();
+    })
+  }
 
   init();
 });
