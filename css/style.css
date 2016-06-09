@@ -11,6 +11,18 @@ body {
   color: white;
 }
 
+div {
+  font-size: 30px;
+}
+
+span {
+  font-size: 40px;
+}
+
+#reset {
+  background-color: #585858;
+}
+
 #container {
   position: relative;
   width: 806px;
@@ -46,7 +58,7 @@ body {
 }
 
 
- #endgame {
+#endgame {
   display: none;
   position: absolute;
   width: 100%;
@@ -54,17 +66,16 @@ body {
   background-color: black;
 }
 
-  #timelapse {
+#timelapse {
   margin-top: 0;
   padding-top: 300px;
   padding-bottom: 30px;
   font-size: 50px;
 }
 
-  div {
-    font-size: 30px;
-  }
-
-  span {
-    font-size: 40px;
-  }
+/*#explosion {
+  width: 180px;
+  height: 170px;
+  background-image: url(../img/explosion.png);
+  background-position: -180px -170px;
+}*/
