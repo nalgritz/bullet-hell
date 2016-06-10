@@ -11,6 +11,18 @@ body {
   color: white;
 }
 
+div {
+  font-size: 30px;
+}
+
+span {
+  font-size: 40px;
+}
+
+#reset {
+  background-color: #585858;
+}
+
 #container {
   position: relative;
   width: 806px;
@@ -28,13 +40,14 @@ body {
   background-image: url("../img/bg.jpg");
 }
 
-#ship {
+.shipgrp {
   position: absolute;
   display: block;
   width:  60px;
   height: 60px;
   top: 400px;
   left: 370px;
+  z-index: 1;
 }
 
 .bullet {
@@ -46,7 +59,7 @@ body {
 }
 
 
- #endgame {
+#endgame {
   display: none;
   position: absolute;
   width: 100%;
@@ -54,17 +67,34 @@ body {
   background-color: black;
 }
 
-  #timelapse {
+#timelapse {
   margin-top: 0;
   padding-top: 300px;
   padding-bottom: 30px;
   font-size: 50px;
 }
 
-  div {
-    font-size: 30px;
-  }
+#explosion {
+  display: none;
+  background-size: 200%;
+  background-image: url(../img/explosion1.png);
+  background-position: 0 0 ;
+}
 
-  span {
-    font-size: 40px;
-  }
+/* Chrome, Safari, Opera */
+@-webkit-keyframes explode-animate {
+    0%   {background-position: 60px 0 ;}
+    50%  {background-position: 60px 0 ;}
+    100% {background-position: 60px 0 ;}
+}
+
+/* Standard syntax */
+@keyframes explodeanimate {
+  0%   {background-position: 60px 0 ;}
+  100%  {background-position: 0 0 ;}
+}
+
+.activate {
+  -webkit-animation: explodeanimate 1s infinite; /* Chrome, Safari, Opera */
+  animation: explodeanimate 1s infinite;
+}
