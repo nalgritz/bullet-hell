@@ -30,12 +30,11 @@ $(document).ready(function () {
     right: false,
     start: false
   };
-  // // Sound effect
-  // var explosionSound = function () {
-  //   new buzz.sound('sounds/explosion',
-  //   { formats: ['wav']
-  //   });
-  // };
+  // Effect
+  var $explosion = $('#explosion');
+  var explosionSound = new buzz.sound('sounds/explosion.wav', {
+    preload: true
+  });
 
   // score for bestScore
   var score = [];
@@ -104,18 +103,32 @@ $(document).ready(function () {
           clearInterval(gameloop);
           clearInterval(bulletLoop);
           $('.bullet').stop();
-          // explosionSound();
-          endTime = Date.now();
-          timeLapsed = endTime - startTime;
-          timeSurvived = (timeLapsed/1000).toFixed(3);
+          explosionSound.play();
+          var position = $ship.position();
+          $ship.hide();
+          $explosion.show().css({
+            left: position.left,
+            top: position.top,
+          })
+          setTimeout(function(){
+            $explosion.css({
+              'background-position': '60px 0'
+            });
+          }, 500);
           setTimeout(function () {
-            $endGame.show().effect('bounce', {times: 4}, 'slow');
-            $('.bullet').remove();
-          }, 1000);
-          $('#time').text(timeSurvived);
-          $('#bulletnumber').text(bulletAmount);
-          score.push(parseFloat(timeSurvived));
-          $('#bestscore').text(Math.max(...score));
+            $explosion.hide();
+            endTime = Date.now();
+            timeLapsed = endTime - startTime;
+            timeSurvived = (timeLapsed/1000).toFixed(3);
+            setTimeout(function () {
+              $endGame.show().effect('bounce', {times: 4}, 'slow');
+              $('.bullet').remove();
+            }, 1500);
+            $('#time').text(timeSurvived);
+            $('#bulletnumber').text(bulletAmount);
+            score.push(parseFloat(timeSurvived));
+            $('#bestscore').text(Math.max(...score));
+          }, 600);
         }
       }
     });
@@ -216,6 +229,7 @@ $(document).ready(function () {
     gameloop = setInterval(function(){
       moveShip();
     }, 1000/60);
+    $explosion.hide();
   };
 
   var init = function () {
@@ -229,12 +243,13 @@ $(document).ready(function () {
       clearInterval(gameloop);
       clearInterval(bulletLoop);
       $('.bullet').stop().remove();
-      $ship.css({top: '400px', left: '370px'});
+      $ship.css({top: '400px', left: '370px'}).show();
       bulletAmount = 0;
       $('#endgame').hide();
+      $('#reset').blur();
       bindStart();
-    })
-  }
+    });
+  };
 
   init();
 });

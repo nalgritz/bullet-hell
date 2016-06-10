@@ -6,10 +6,9 @@
   <script src="js/jquery-2.2.4.min.js"></script>
   <script src="js/jquery-ui.min.js" async></script>
   <script src="js/buzz.min.js" async></script>
-  <script src="js/bootstrap.min.js"></script>
   <script src="js/application.js" async></script>
   <script src="js/blockjs.js" async></script>
-  <link rel="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <title>
     I want to play a game...
@@ -20,10 +19,11 @@
   <button class="btn btn-lg" id="reset">Reset Game</button>
   <div id="container">
     <div class="center-block" id="screen">
-      <img id="ship" src="./img/ship1.png">
+      <img class="shipgrp" id="ship" src="./img/ship1.png"></div>
+      <div class="shipgrp" id="explosion">
     </div>
     <div id="endgame">
-      <h2 id="timelapse">Time Lapsed</h2>
+      <h2 id="timelapse">You are done</h2>
       <div>
         <span id="time"></span> s
       </div>

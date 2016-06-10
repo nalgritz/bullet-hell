@@ -40,13 +40,14 @@ span {
   background-image: url("../img/bg.jpg");
 }
 
-#ship {
+.shipgrp {
   position: absolute;
   display: block;
   width:  60px;
   height: 60px;
   top: 400px;
   left: 370px;
+  z-index: 1;
 }
 
 .bullet {
@@ -73,9 +74,27 @@ span {
   font-size: 50px;
 }
 
-/*#explosion {
-  width: 180px;
-  height: 170px;
-  background-image: url(../img/explosion.png);
-  background-position: -180px -170px;
-}*/
+#explosion {
+  display: none;
+  background-size: 200%;
+  background-image: url(../img/explosion1.png);
+  background-position: 0 0 ;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes explode-animate {
+    0%   {background-position: 60px 0 ;}
+    50%  {background-position: 60px 0 ;}
+    100% {background-position: 60px 0 ;}
+}
+
+/* Standard syntax */
+@keyframes explodeanimate {
+  0%   {background-position: 60px 0 ;}
+  100%  {background-position: 0 0 ;}
+}
+
+.activate {
+  -webkit-animation: explodeanimate 1s infinite; /* Chrome, Safari, Opera */
+  animation: explodeanimate 1s infinite;
+}
