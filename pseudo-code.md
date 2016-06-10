@@ -20,11 +20,6 @@ arrow button -> move the plane
           left: xPos + 'px',
           top: yPox + 'px'
         });
-
-
-
-
-
  1.2 bullets angle
  1.3 bullets speed
 2.  collision system
