@@ -23,13 +23,13 @@ $(document).ready(function () {
   var bulletAmount   = 0;
   var defaultBulletDuration = 4000;
   // keyboard
-  var key = {
-    up   : false,
+  var keys = {
+    top   : false,
+    right: false,
     down : false,
     left : false,
-    right: false,
-    start: false
   };
+
   // Effect
   var $explosion = $('#explosion');
   var explosionSound = new buzz.sound('sounds/explosion.wav', {
@@ -108,7 +108,7 @@ $(document).ready(function () {
           $ship.hide();
           $explosion.show().css({
             left: position.left,
-            top: position.top,
+            top: position.top
           })
           setTimeout(function(){
             $explosion.css({
@@ -147,72 +147,77 @@ $(document).ready(function () {
     }, 1000);
   };
 
-  // Control
-  var moveShip = function () {
-    var shipPos = $ship.position();
-    if (key.up) {
-      if ( shipPos.top > 0) {
-        $('#ship').css({top: shipPos.top - shipSpeed});
-      } else {
-        key.up = false;
-      }
+  //
+  var setActiveMovement = function (e) {
+    var keyCode = e.keyCode;
+
+    if (keyCode < 37 || keyCode > 40) {
+      return false;
     }
-    if (key.down) {
-      if (yScreen-shipPos.top > $ship.height()) {
-        $('#ship').css({top: shipPos.top + shipSpeed});
-      } else {
-        key.down = false;
-      }
-    }
-    if (key.left) {
-      if ( shipPos.left > 0) {
-        $('#ship').css({left: shipPos.left - shipSpeed});
-      } else {
-        key.left = false;
-      }
-    }
-    if (key.right) {
-      if (xScreen-shipPos.left > $ship.width()) {
-        $('#ship').css({left: shipPos.left + shipSpeed});
-      } else {
-        key.right = false;
-      }
+
+    var active = e.type === 'keydown' ? true : false;
+
+    e.preventDefault();
+    switch (keyCode) {
+      case 38:
+        keys["top"] = active;
+        break;
+      case 39:
+        keys["right"] = active;
+        break;
+      case 40:
+        keys["down"] = active;
+        break;
+      case 37:
+        keys["left"] = active;
+        break;
     }
   };
 
-  var keybtn = function () {
-    $(document).on('keydown', function(e){
-      switch (e.keyCode) {
-        case 37:
-          key.left  = true;
-          break;
-        case 38:
-          key.up    = true;
-          break;
-        case 39:
-          key.right = true;
-          break;
-        case 40:
-          key.down  = true;
-          break;
+  // Key detection
+  var keybtn = function(){
+    document.addEventListener('keydown', setActiveMovement);
+    document.addEventListener('keyup', setActiveMovement);
+  };
+
+  // Control
+  var moveShip = function (x, y) {
+    var shipPos = $ship.position();
+    $ship.css({left: shipPos.left+x*shipSpeed});
+    $ship.css({top : shipPos.top +y*shipSpeed});
+  };
+
+  // Character control
+  var dectectShipMovement = function () {
+    var shipPos = $ship.position();
+    if (keys.left) {
+      if ( shipPos.left > 0) {
+        moveShip(-1,0);
+      } else {
+        shipPos.left += 0;
       }
-    });
-    $(document).on('keyup', function(e){
-      switch (e.keyCode) {
-        case 37:
-          key.left  = false;
-          break;
-        case 38:
-          key.up    = false;
-          break;
-        case 39:
-          key.right = false;
-          break;
-        case 40:
-          key.down  = false;
-          break;
+    }
+    if (keys.down) {
+      if (yScreen-shipPos.top > $ship.height()) {
+        moveShip(0,1);
+      } else {
+        shipPos.top += 0;
       }
-    });
+    }
+    if (keys.right) {
+      if (xScreen-shipPos.left > $ship.width()) {
+        moveShip(1,0);
+      } else {
+        shipPos.left += 0;
+      }
+    }
+    if (keys.top) {
+      if ( shipPos.top > 0) {
+        moveShip(0,-1);
+      } else {
+        shipPos.top += 0;
+      }
+    }
   };
 
   var bindStart = function () {
@@ -227,7 +232,7 @@ $(document).ready(function () {
     startTime = Date.now();
     generateBullet();
     gameloop = setInterval(function(){
-      moveShip();
+      dectectShipMovement();
     }, 1000/60);
     $explosion.hide();
   };
