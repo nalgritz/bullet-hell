@@ -123,6 +123,7 @@ $(document).ready(function () {
             setTimeout(function () {
               $endGame.show().effect('bounce', {times: 4}, 'slow');
               $('.bullet').remove();
+              bindResetBtn();
             }, 1500);
             $('#time').text(timeSurvived);
             $('#bulletnumber').text(bulletAmount);
@@ -239,7 +240,7 @@ $(document).ready(function () {
   };
 
   var bindResetBtn = function () {
-    $('#reset').on('click', function () {
+    $('#reset').one('click', function () {
       clearInterval(gameloop);
       clearInterval(bulletLoop);
       $('.bullet').stop().remove();
